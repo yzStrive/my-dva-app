@@ -4,7 +4,7 @@ import DocumentTitle from "react-document-title"
 import { Icon } from "antd"
 // import GlobalFooter from '../components/GlobalFooter';
 import styles from "./UserLayout.less"
-// import logo from '../assets/logo.svg';
+import logo from "../assets/logo.svg"
 import { getRoutes } from "../utils/utils"
 // const styles = {}
 const links = [
@@ -50,7 +50,7 @@ class UserLayout extends React.PureComponent {
             <div className={styles.top}>
               <div className={styles.header}>
                 <Link to="/">
-                  {/* <img alt="logo" className={styles.logo} src={logo} /> */}
+                  <img alt="logo" className={styles.logo} src={logo} />
                   <span className={styles.title}>Ant Design</span>
                 </Link>
               </div>
