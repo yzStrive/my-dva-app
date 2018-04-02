@@ -11,6 +11,13 @@ export default {
       extraBabelPlugins: ['dva-hmr'],
     },
   },
+  proxy:{
+    "/api/users": {
+      "target": "http://jsonplaceholder.typicode.com/",
+      "changeOrigin": true,
+      "pathRewrite": {"^/api" : ""}
+    }
+  },
   alias: {
     components: path.resolve(__dirname, 'src/components/'),
   },

@@ -7,7 +7,7 @@ const menuData = [
     path: "list",
     children: [
       {
-        name:'list首页',
+        name:'list',
         path:'test-list'
       },
     ]
