@@ -12,42 +12,6 @@ export default class GlobalHeader extends PureComponent {
   componentWillUnmount() {
     this.triggerResizeEvent.cancel()
   }
-  getNoticeData() {
-    const { notices = [] } = this.props
-    if (notices.length === 0) {
-      return {}
-    }
-    const newNotices = notices.map(notice => {
-      const newNotice = { ...notice }
-      if (newNotice.datetime) {
-        newNotice.datetime = moment(notice.datetime).fromNow()
-      }
-      // transform id to item key
-      if (newNotice.id) {
-        newNotice.key = newNotice.id
-      }
-      if (newNotice.extra && newNotice.status) {
-        const color = {
-          todo: "",
-          processing: "blue",
-          urgent: "red",
-          doing: "gold"
-        }[newNotice.status]
-        newNotice.extra = (
-          <Tag color={color} style={{ marginRight: 0 }}>
-            {newNotice.extra}
-          </Tag>
-        )
-      }
-      return newNotice
-    })
-    return groupBy(newNotices, "type")
-  }
-  toggle = () => {
-    const { collapsed, onCollapse } = this.props
-    onCollapse(!collapsed)
-    this.triggerResizeEvent()
-  }
   /* eslint-disable*/
   @Debounce(600)
   triggerResizeEvent() {
@@ -56,59 +20,39 @@ export default class GlobalHeader extends PureComponent {
     window.dispatchEvent(event)
   }
   render() {
-    const {
-      currentUser,
-      collapsed,
-      fetchingNotices,
-      isMobile,
-      logo,
-      onNoticeVisibleChange,
-      onMenuClick,
-      onNoticeClear
-    } = this.props
-    const menu = (
-      <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-        <Menu.Item disabled>
-          <Icon type="user" />个人中心
-        </Menu.Item>
-        <Menu.Item disabled>
-          <Icon type="setting" />设置
-        </Menu.Item>
-        <Menu.Item key="triggerError">
-          <Icon type="close-circle" />触发报错
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item key="logout">
-          <Icon type="logout" />退出登录
-        </Menu.Item>
-      </Menu>
-    )
-    const noticeData = this.getNoticeData()
+    const { currentUser, onMenuClick } = this.props
+    const leftMenuDatas = [
+      {
+        name: "配送",
+        path: "/list"
+      },
+      {
+        name: "租车",
+        path: "/list1"
+      },
+      {
+        name: "换电",
+        path: "/list2"
+      },
+      {
+        name: "系统",
+        path: "/list3"
+      }
+    ]
+    const leftMenu = leftMenuDatas.map((item, index) => (
+      <Menu.Item key={item.path}>
+        <Icon />
+        {item.name}
+      </Menu.Item>
+    ))
     return (
-      <div className={styles.header}>
-        {isMobile && [
-          <Link to="/" className={styles.logo} key="logo">
-            <img src={logo} alt="logo" width="32" />
-          </Link>,
-          <Divider type="vertical" key="line" />
-        ]}
-        <div className={styles.right}>
-          {currentUser.name ? (
-            <Dropdown overlay={menu}>
-              <span className={`${styles.action} ${styles.account}`}>
-                <Avatar
-                  size="small"
-                  className={styles.avatar}
-                  src={currentUser.avatar}
-                />
-                <span className={styles.name}>{currentUser.name}</span>
-              </span>
-            </Dropdown>
-          ) : (
-            <Spin size="small" style={{ marginLeft: 8 }} />
-          )}
-        </div>
-      </div>
+      <Menu
+        onClick={onMenuClick}
+        style={{ background: "#232f34",color:"#fff" }}
+        mode="horizontal"
+      >
+        {leftMenu}
+      </Menu>
     )
   }
 }

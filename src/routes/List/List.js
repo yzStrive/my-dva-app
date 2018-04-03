@@ -17,7 +17,7 @@ export default class SearchList extends Component {
   render() {
     const {list:{ list }} = this.props
     const lis = list.map((item,index)=>{
-      return <li key={index}>{item.name}</li>
+      return <li key={index}>{item.name+'-'+(Date.now()+index)}</li>
     })
     return <div><ul>{lis}</ul></div>
   }
