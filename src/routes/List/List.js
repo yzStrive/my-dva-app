@@ -23,6 +23,6 @@ export default class SearchList extends Component {
     const lis = list.map((item,index)=>{
       return <li key={index}>{item.name}</li>
     })
-    return <div>{lis}</div>
+    return <div><ul>{lis}</ul></div>
   }
 }

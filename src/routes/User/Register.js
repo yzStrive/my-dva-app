@@ -265,7 +265,7 @@ export default class Register extends Component {
             </Row>
           </FormItem>
           <FormItem>
-            <Button
+            {/* <Button
               size="large"
               loading={submitting}
               className={styles.submit}
@@ -273,7 +273,7 @@ export default class Register extends Component {
               htmlType="submit"
             >
               注册
-            </Button>
+            </Button> */}
             <Link className={styles.login} to="/user/login">
               使用已有账户登录
             </Link>

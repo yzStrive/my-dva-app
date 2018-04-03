@@ -35,9 +35,9 @@ class UserLayout extends React.PureComponent {
   getPageTitle() {
     const { routerData, location } = this.props
     const { pathname } = location
-    let title = "KP"
+    let title = "Ant Design"
     if (routerData[pathname] && routerData[pathname].name) {
-      title = `${routerData[pathname].name} - KP`
+      title = `${routerData[pathname].name} - Ant Design`
     }
     return title
   }
@@ -51,11 +51,11 @@ class UserLayout extends React.PureComponent {
               <div className={styles.header}>
                 <Link to="/">
                   <img alt="logo" className={styles.logo} src={logo} />
-                  <span className={styles.title}>KP</span>
+                  <span className={styles.title}>Ant Design</span>
                 </Link>
               </div>
               {/* <div className={styles.desc}>
-                KP 是西湖区最具影响力的 Web 设计规范
+                Ant Design 是西湖区最具影响力的 Web 设计规范
               </div> */}
             </div>
             <Switch>
