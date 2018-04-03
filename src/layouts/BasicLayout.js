@@ -1,6 +1,6 @@
-import React, { Fragment } from "react"
+import React from "react"
 import PropTypes from "prop-types"
-import { Layout, Icon, message } from "antd"
+import { Layout, message } from "antd"
 import DocumentTitle from "react-document-title"
 import { connect } from "dva"
 import { Route, Redirect, Switch, routerRedux } from "dva/router"
@@ -8,16 +8,13 @@ import { ContainerQuery } from "react-container-query"
 import classNames from "classnames"
 import { enquireScreen } from "enquire-js"
 import GlobalHeader from '../components/GlobalHeader';
-// import GlobalFooter from '../components/GlobalFooter';
 import SiderMenu from '../components/SiderMenu';
 import NotFound from "../routes/Exception/404"
 import { getRoutes } from "../utils/utils"
-import Authorized from "../utils/Authorized"
 import { getMenuData } from "../common/menu"
 import logo from "../assets/logo.svg"
 
-const { Content, Header, Footer } = Layout
-const { AuthorizedRoute, check } = Authorized
+const { Content, Header } = Layout
 
 /**
  * 根据菜单取得重定向地址.
@@ -82,8 +79,10 @@ let isMobile
 enquireScreen(b => {
   isMobile = b
 })
-
-class BasicLayout extends React.PureComponent {
+@connect(({user})=>({
+  currentUser:user.currentUser
+}))
+export default class BasicLayout extends React.PureComponent {
   static childContextTypes = {
     location: PropTypes.object,
     breadcrumbNameMap: PropTypes.object
@@ -131,7 +130,7 @@ class BasicLayout extends React.PureComponent {
       const { routerData } = this.props
       // get the first authorized route path in routerData
       const authorizedPath = Object.keys(routerData).find(
-        item => check(routerData[item].authority, item) && item !== "/"
+        item => item && item !== "/"
       )
       return authorizedPath
     }
@@ -183,10 +182,6 @@ class BasicLayout extends React.PureComponent {
       <Layout>
         <SiderMenu
           logo={logo}
-          // 不带Authorized参数的情况下如果没有权限,会强制跳到403界面
-          // If you do not have the Authorized parameter
-          // you will be forced to jump to the 403 interface without permission
-          Authorized={Authorized}
           menuData={getMenuData()}
           collapsed={collapsed}
           location={location}
@@ -214,48 +209,17 @@ class BasicLayout extends React.PureComponent {
                 <Redirect key={item.from} exact from={item.from} to={item.to} />
               ))}
               {getRoutes(match.path, routerData).map(item => (
-                <AuthorizedRoute
+                <Route
                   key={item.key}
                   path={item.path}
                   component={item.component}
                   exact={item.exact}
-                  authority={item.authority}
-                  redirectPath="/exception/403"
                 />
               ))}
               <Redirect exact from="/" to={bashRedirect} />
               <Route render={NotFound} />
             </Switch>
           </Content>
-          {/* <Footer style={{ padding: 0 }}>
-            <GlobalFooter
-              links={[
-                {
-                  key: 'Pro 首页',
-                  title: 'Pro 首页',
-                  href: 'http://pro.ant.design',
-                  blankTarget: true,
-                },
-                {
-                  key: 'github',
-                  title: <Icon type="github" />,
-                  href: 'https://github.com/ant-design/ant-design-pro',
-                  blankTarget: true,
-                },
-                {
-                  key: 'Ant Design',
-                  title: 'Ant Design',
-                  href: 'http://ant.design',
-                  blankTarget: true,
-                },
-              ]}
-              copyright={
-                <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 蚂蚁金服体验技术部出品
-                </Fragment>
-              }
-            />
-          </Footer> */}
         </Layout>
       </Layout>
     )
@@ -269,10 +233,3 @@ class BasicLayout extends React.PureComponent {
     )
   }
 }
-
-export default connect(({ user, global, loading }) => ({
-  currentUser: user.currentUser
-  // collapsed: global.collapsed,
-  // fetchingNotices: loading.effects['global/fetchNotices'],
-  // notices: global.notices,
-}))(BasicLayout)
