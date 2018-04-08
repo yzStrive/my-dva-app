@@ -11,7 +11,7 @@ import GlobalHeader from "../components/GlobalHeader"
 import SiderMenu from "../components/SiderMenu"
 import NotFound from "../routes/Exception/404"
 import { getRoutes } from "../utils/utils"
-import { getMenuData } from "../common/menu"
+import { getMenuData,getFirstMenuData } from "../common/menu"
 import logo from "../assets/logo.svg"
 
 const { Content, Header } = Layout
@@ -20,6 +20,8 @@ const { Content, Header } = Layout
  * 根据菜单取得重定向地址.
  */
 const redirectData = []
+const secondaryMenu = getMenuData()
+const firstLevelMenu = getFirstMenuData()
 const getRedirect = item => {
   if (item && item.children) {
     if (item.children[0] && item.children[0].path) {
@@ -33,7 +35,17 @@ const getRedirect = item => {
     }
   }
 }
-getMenuData().forEach(getRedirect)
+const pushFirstMenuRedirect = item => {
+  // '/express' => 'express'
+  const path = item.path.split('/').filter(i=>i)[0]
+  const redirect = secondaryMenu.find(it=>it.parent === path)
+  redirectData.push({
+    from:`${item.path}`,
+    to:`${redirect.path}`
+  })
+}
+firstLevelMenu.forEach(pushFirstMenuRedirect)
+secondaryMenu.forEach(getRedirect)
 
 /**
  * 获取面包屑映射
@@ -79,8 +91,9 @@ let isMobile
 enquireScreen(b => {
   isMobile = b
 })
-@connect(({ user }) => ({
-  currentUser: user.currentUser
+@connect(({ user,global }) => ({
+  currentUser: user.currentUser,
+  collapsed:global.collapsed
 }))
 export default class BasicLayout extends React.PureComponent {
   static childContextTypes = {

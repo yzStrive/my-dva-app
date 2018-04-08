@@ -70,20 +70,38 @@ export const getRouterData = app => {
     '/': {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     },
-    '/list/test-list':{
+    '/express/order/list': {
+      component: dynamicWrapper(app, [], () => import('../routes/List/List')),
+    },
+    '/express/delivery/settings':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/list1/test-list':{
+    '/express/courier/manage':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/list2/test-list':{
+    '/express/courier/check':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/list3/test-list':{
+    '/express/order/dispatch':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/user': {
-      component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
+    '/express1/courier/check':{
+      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    },
+    '/express1/delivery/settings':{
+      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    },
+    '/express1/courier/manage':{
+      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    },
+    '/express1/order/dispatch':{
+      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    },
+    '/express1/order/list': {
+      component: dynamicWrapper(app, [], () => import('../routes/List/List')),
+    },
+    '/user':{
+      component: dynamicWrapper(app, ['login'], () => import('../layouts/UserLayout')),
     },
     '/user/login': {
       component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
@@ -91,7 +109,6 @@ export const getRouterData = app => {
   }
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData())
-
   // Route configuration data
   // eg. {name,authority ...routerConfig }
   const routerData = {}
@@ -113,7 +130,7 @@ export const getRouterData = app => {
     router = {
       ...router,
       name: router.name || menuItem.name,
-      authority: router.authority || menuItem.authority,
+      // authority: router.authority || menuItem.authority,
       hideInBreadcrumb: router.hideInBreadcrumb || menuItem.hideInBreadcrumb
     }
     routerData[path] = router

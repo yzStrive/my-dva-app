@@ -1,70 +1,16 @@
 import { isUrl } from "../utils/utils"
-
-const menuData = [
-  {
-    name: "配送",
-    icon: "table",
-    parent:'list',
-    path: "list",
-    children: [
-      {
-        name: "list",
-        path: "test-list"
-      }
-    ]
-  },
-  {
-    name: "租车",
-    icon: "table",
-    parent: "list1",
-    path: "list1",
-    children: [
-      {
-        name: "list",
-        path: "test-list"
-      }
-    ]
-  },
-  {
-    name: "换车",
-    icon: "table",
-    parent: "list2",
-    path: "list2",
-    children: [
-      {
-        name: "list",
-        path: "test-list"
-      }
-    ]
-  },
-  {
-    name: "系统",
-    icon: "table",
-    parent: "list3",
-    path: "list3",
-    children: [
-      {
-        name: "list",
-        path: "test-list"
-      }
-    ]
-  }
-]
-function formatter(data, parentPath = "/") {
+import { getSecondaryMenu, getFirstLevelMenu } from "../utils/menu"
+function formatter(data) {
   return data.map(item => {
-    let { path } = item
-    if (!isUrl(path)) {
-      path = parentPath + item.path
-    }
     const result = {
-      ...item,
-      path
+      ...item
     }
     if (item.children) {
-      result.children = formatter(item.children, `${parentPath}${item.path}/`)
+      result.children = formatter(item.children)
     }
     return result
   })
 }
 
-export const getMenuData = () => formatter(menuData)
+export const getMenuData = () => formatter(getSecondaryMenu())
+export const getFirstMenuData = () => getFirstLevelMenu()

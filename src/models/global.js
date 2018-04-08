@@ -1,5 +1,4 @@
 import { queryNotices } from "../services/api"
-
 export default {
   namespace: "global",
 
@@ -30,7 +29,8 @@ export default {
         type: "user/changeNotifyCount",
         payload: count
       })
-    }
+    },
+
   },
 
   reducers: {
@@ -53,7 +53,6 @@ export default {
       }
     }
   },
-
   subscriptions: {
     setup({ history }) {
       // Subscribe history(url) change, trigger `load` action if pathname is `/`

@@ -1,6 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { fakeAccountLogin } from '../services/api';
-
+import { getFirstLevelMenu,getSecondaryMenu} from '../services/global'
+import { setFirstLevelMenu, setSecondaryMenu } from '../utils/menu'
 export default {
   namespace: 'login',
 
@@ -18,6 +19,11 @@ export default {
       // Login successfully
       if (response.status === 'ok') {
         yield put(routerRedux.push('/'));
+        const firstResponse = yield call(getFirstLevelMenu)
+        setFirstLevelMenu(firstResponse)
+
+        const sencondaryResponse = yield call(getSecondaryMenu)
+        setSecondaryMenu(sencondaryResponse)
       }
     },
     *logout(_, { put, select }) {
@@ -48,6 +54,6 @@ export default {
         status: payload.status,
         type: payload.type,
       };
-    },
+    }
   },
 };

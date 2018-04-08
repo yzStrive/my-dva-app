@@ -4,10 +4,8 @@ import moment from "moment"
 import groupBy from "lodash/groupBy"
 import Debounce from "lodash-decorators/debounce"
 import { Link } from "dva/router"
-// import NoticeIcon from '../NoticeIcon';
-// import HeaderSearch from '../HeaderSearch';
 import styles from "./index.less"
-
+import {  getFirstLevelMenu } from '../../utils/menu'
 export default class GlobalHeader extends PureComponent {
   componentWillUnmount() {
     this.triggerResizeEvent.cancel()
@@ -21,24 +19,7 @@ export default class GlobalHeader extends PureComponent {
   }
   render() {
     const { currentUser, onMenuClick } = this.props
-    const leftMenuDatas = [
-      {
-        name: "配送",
-        path: "/list"
-      },
-      {
-        name: "租车",
-        path: "/list1"
-      },
-      {
-        name: "换电",
-        path: "/list2"
-      },
-      {
-        name: "系统",
-        path: "/list3"
-      }
-    ]
+    const leftMenuDatas = getFirstLevelMenu()
     const leftMenu = leftMenuDatas.map((item, index) => (
       <Menu.Item key={item.path}>
         <Icon />
