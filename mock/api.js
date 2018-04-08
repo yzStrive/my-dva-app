@@ -318,9 +318,28 @@ export const getSecondaryMenu = [
     children: [
       {
         upMenuCode: "20100000",
-        children: [],
+        children: [{
+          upMenuCode: "20100100",
+          children: [],
+          menuIcon: "swap",
+          menuUrl: "/express/order/list/test1",
+          menuCode: "20100201",
+          menuLevel: 2,
+          menuName: "订单查询-child1",
+          menuScope: "express"
+        },{
+          upMenuCode: "20100100",
+          children: [],
+          menuIcon: "swap",
+          menuUrl: "/express/order/list/test2",
+          menuCode: "20100202",
+
+          menuLevel: 2,
+          menuName: "订单查询-child2",
+          menuScope: "express"
+        }],
         menuIcon: "search",
-        menuUrl: "/express/order/list",
+        menuUrl: "/express/order/list/list1",
         menuCode: "20100100",
         menuLevel: 2,
         menuName: "订单查询",
@@ -330,7 +349,7 @@ export const getSecondaryMenu = [
         upMenuCode: "20100000",
         children: [],
         menuIcon: "swap",
-        menuUrl: "/express/order/dispatch",
+        menuUrl: "/express/order-dispatch",
         menuCode: "20100200",
         menuLevel: 2,
         menuName: "订单调度",
@@ -375,18 +394,19 @@ export const getSecondaryMenu = [
     menuUrl:'/express/courier'
   },
   {
-    children: [
-      {
-        upMenuCode: "20300000",
-        children: [],
-        menuIcon: "menu-unfold",
-        menuUrl: "/express/delivery/settings",
-        menuCode: "20300100",
-        menuLevel: 2,
-        menuName: "配送设置",
-        menuScope: "express"
-      }
-    ],
+    // children: [
+    //   {
+    //     upMenuCode: "20300000",
+    //     children: [],
+    //     menuIcon: "menu-unfold",
+    //     menuUrl: "/express/delivery/settings",
+    //     menuCode: "20300100",
+    //     menuLevel: 2,
+    //     menuName: "配送设置",
+    //     menuScope: "express"
+    //   }
+    // ],
+    children:[],
     menuCode: "20300000",
     menuIcon: "setting",
     menuLevel: 1,

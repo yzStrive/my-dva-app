@@ -1,10 +1,12 @@
 import { queryNotices } from "../services/api"
+import * as menuHelper from '../utils/menu'
+import { routerRedux } from 'dva/router'
 export default {
   namespace: "global",
 
   state: {
     collapsed: false,
-    notices: []
+    menuData:menuHelper.getSecondaryMenu()
   },
 
   effects: {
@@ -30,6 +32,15 @@ export default {
         payload: count
       })
     },
+    *updateMenuData({scope,key},{put}){
+      menuHelper.updateMenusHiddenProp(scope)
+      const menuData = menuHelper.getSecondaryMenu()
+      yield put({
+        type:"updateMenu",
+        payload:menuData
+      })
+      yield put(routerRedux.push(key))
+    }
 
   },
 
@@ -50,6 +61,12 @@ export default {
       return {
         ...state,
         notices: state.notices.filter(item => item.type !== payload)
+      }
+    },
+    updateMenu(state,{payload}){
+      return {
+        ...state,
+        menuData:payload
       }
     }
   },

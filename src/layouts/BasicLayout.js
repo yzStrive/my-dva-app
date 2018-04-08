@@ -12,6 +12,8 @@ import SiderMenu from "../components/SiderMenu"
 import NotFound from "../routes/Exception/404"
 import { getRoutes } from "../utils/utils"
 import { getMenuData,getFirstMenuData } from "../common/menu"
+import * as menuHelper from '../utils/menu'
+import { urlToScope } from '../utils/urlTool'
 import logo from "../assets/logo.svg"
 
 const { Content, Header } = Layout
@@ -92,7 +94,8 @@ enquireScreen(b => {
 })
 @connect(({ user,global }) => ({
   currentUser: user.currentUser,
-  collapsed:global.collapsed
+  collapsed:global.collapsed,
+  menuData:global.menuData
 }))
 export default class BasicLayout extends React.PureComponent {
   static childContextTypes = {
@@ -161,8 +164,15 @@ export default class BasicLayout extends React.PureComponent {
       payload: type
     })
   }
-  handleMenuClick = ({ key }) => {
-    this.props.dispatch(routerRedux.push(key))
+  handleMenuClick = ({key}) => {
+    const scope = urlToScope(key)
+    // console.log(scope)
+    // menuHelper.updateMenusHiddenProp(scope)
+    this.props.dispatch({
+      type:'global/updateMenuData',
+      key,
+      scope
+    })
   }
   handleNoticeVisibleChange = visible => {
     if (visible) {
@@ -179,7 +189,8 @@ export default class BasicLayout extends React.PureComponent {
       notices,
       routerData,
       match,
-      location
+      location,
+      menuData
     } = this.props
     const bashRedirect = this.getBashRedirect()
     const layout = (
@@ -190,7 +201,7 @@ export default class BasicLayout extends React.PureComponent {
           onMenuClick={this.handleMenuClick} />
         <Layout>
           <SiderMenu
-            menuData={getMenuData()}
+            menuData={menuData}
             collapsed={collapsed}
             location={location}
             isMobile={this.state.isMobile}

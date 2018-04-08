@@ -3,7 +3,7 @@ import { Layout, Menu, Icon } from "antd"
 import pathToRegexp from "path-to-regexp"
 import { Link } from "dva/router"
 import styles from "./index.less"
-import { urlToList } from "../_utils/pathTools"
+import { urlToList } from '../../utils/urlTool'
 
 const { Sider } = Layout
 const { SubMenu } = Menu
@@ -29,15 +29,19 @@ const getIcon = icon => {
 }
 
 export const getMeunMatcheys = (flatMenuKeys, path) => {
-  return flatMenuKeys.filter(item => {
+  // console.log(flatMenuKeys)
+  // console.log('**********************')
+  // console.log(path)
+  const result =  flatMenuKeys.filter(item => {
     return pathToRegexp(item).test(path)
   })
+  // console.log(result)
+  return result
 }
 
 export default class SiderMenu extends PureComponent {
   constructor(props) {
     super(props)
-    this.menus = props.menuData
     this.flatMenuKeys = this.getFlatMenuKeys(props.menuData)
     this.state = {
       openKeys: this.getDefaultCollapsedSubMenus(props)
@@ -57,11 +61,13 @@ export default class SiderMenu extends PureComponent {
    */
   getDefaultCollapsedSubMenus(props) {
     const { location: { pathname } } = props || this.props
-    return urlToList(pathname)
+    const result =  urlToList(pathname)
       .map(item => {
         return getMeunMatcheys(this.flatMenuKeys, item)[0]
       })
       .filter(item => item)
+      // console.log(result)
+    return result
   }
   /**
    * Recursively flatten the data
@@ -178,21 +184,21 @@ export default class SiderMenu extends PureComponent {
       return `/${path || ""}`.replace(/\/+/g, "/")
     }
   }
-  isMainMenu = key => {
-    return this.menus.some(
+  isMainMenu = (key,menus) => {
+    return menus.some(
       item => key && (item.key === key || item.path === key)
     )
   }
-  handleOpenChange = openKeys => {
+  handleOpenChange = (openKeys,menus) => {
     const lastOpenKey = openKeys[openKeys.length - 1]
     const moreThanOne =
-      openKeys.filter(openKey => this.isMainMenu(openKey)).length > 1
+      openKeys.filter(openKey => this.isMainMenu(openKey,menus)).length > 1
     this.setState({
       openKeys: moreThanOne ? [lastOpenKey] : [...openKeys]
     })
   }
   render() {
-    const { logo, collapsed, onCollapse } = this.props
+    const { logo, collapsed, onCollapse,menuData } = this.props
     const { openKeys } = this.state
     // Don't show popup menu when it is been collapsed
     const menuProps = collapsed
@@ -220,11 +226,11 @@ export default class SiderMenu extends PureComponent {
           theme="dark"
           mode="inline"
           {...menuProps}
-          onOpenChange={this.handleOpenChange}
+          onOpenChange={(openKeys)=>this.handleOpenChange(openKeys,menuData)}
           selectedKeys={selectedKeys}
           style={{ padding: "16px 0", width: "100%" }}
         >
-          {this.getNavMenuItems(this.menus)}
+          {this.getNavMenuItems(menuData)}
         </Menu>
       </Sider>
     )

@@ -26,7 +26,7 @@ export default {
         const secondaryMenu = menuHelper.handleTree(sencondaryResponse)
         menuHelper.setSecondaryMenu(secondaryMenu)
 
-        menuHelper.updateMenusHiddenProp(menuHelper.getSecondaryMenu(),menuHelper.getFirstLevelMenu()[0].scope)
+        menuHelper.updateMenusHiddenProp(menuHelper.getFirstLevelMenu()[0].scope)
         // push url
         yield put(routerRedux.push('/'));
       }

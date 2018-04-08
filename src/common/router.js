@@ -73,7 +73,7 @@ export const getRouterData = app => {
     '/express/order/list': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
     },
-    '/express/delivery/settings':{
+    '/express/delivery':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
     '/express/courier/manage':{
@@ -83,6 +83,12 @@ export const getRouterData = app => {
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
     '/express/order/dispatch':{
+      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    },
+    '/express/order/list/test1':{
+      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    },
+    '/express/order/list/test2':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
     '/express1/courier/check':{
@@ -135,5 +141,6 @@ export const getRouterData = app => {
     }
     routerData[path] = router
   })
+  console.log(routerData)
   return routerData
 }

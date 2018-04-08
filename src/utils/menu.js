@@ -17,11 +17,14 @@ export const setFirstLevelMenu = menu => {
   return sessionStorage.setItem(firstLevel, JSON.stringify(newMenu || []))
 }
 
-export const updateMenusHiddenProp = (menus,type) => {
+export const updateMenusHiddenProp = (type) => {
+  const menus = getSecondaryMenu()
   const parent = type.split('/').filter(i=>i)[0]
   menus.forEach(item => {
     if (item.parent !== type) {
       item.hideInMenu = true
+    }else{
+      item.hideInMenu = false
     }
   })
   setSecondaryMenu(menus)
@@ -52,3 +55,4 @@ export const handleFirstTree = trees=>{
     }
   })
 }
+
