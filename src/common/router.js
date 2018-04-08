@@ -71,7 +71,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     },
     '/express/order/list': {
-      component: dynamicWrapper(app, [], () => import('../routes/List/List')),
+      component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
     },
     '/express/delivery/settings':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
@@ -98,7 +98,7 @@ export const getRouterData = app => {
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
     '/express1/order/list': {
-      component: dynamicWrapper(app, [], () => import('../routes/List/List')),
+      component: dynamicWrapper(app,['list'], () => import('../routes/List/List')),
     },
     '/user':{
       component: dynamicWrapper(app, ['login'], () => import('../layouts/UserLayout')),

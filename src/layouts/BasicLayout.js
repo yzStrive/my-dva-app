@@ -37,8 +37,7 @@ const getRedirect = item => {
 }
 const pushFirstMenuRedirect = item => {
   // '/express' => 'express'
-  const path = item.path.split('/').filter(i=>i)[0]
-  const redirect = secondaryMenu.find(it=>it.parent === path)
+  const redirect = secondaryMenu.find(it=>it.parent === item.scope)
   redirectData.push({
     from:`${item.path}`,
     to:`${redirect.path}`
