@@ -70,41 +70,38 @@ export const getRouterData = app => {
     '/': {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     },
-    '/express/order/list': {
+    '/express/order-list': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
     },
-    '/express/delivery':{
+    '/express/delivery-settings':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/express/courier/manage':{
+    '/express/manage_courier':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/express/courier/check':{
+    '/express/check_courier':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/express/order/dispatch':{
+    '/express/order_dispatch':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/express/order/list/test1':{
+    '/express/order_list':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/express/order/list/test2':{
+    '/express1/delivery-settings':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/express1/courier/check':{
+    '/express1/manage_courier':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/express1/delivery/settings':{
+    '/express1/check_courier':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/express1/courier/manage':{
+    '/express1/order_dispatch':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/express1/order/dispatch':{
+    '/express1/order_list':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
-    },
-    '/express1/order/list': {
-      component: dynamicWrapper(app,['list'], () => import('../routes/List/List')),
     },
     '/user':{
       component: dynamicWrapper(app, ['login'], () => import('../layouts/UserLayout')),

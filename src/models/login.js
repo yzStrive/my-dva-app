@@ -23,6 +23,7 @@ export default {
         menuHelper.setFirstLevelMenu(firstResponse)
 
         const sencondaryResponse = yield call(getSecondaryMenu)
+        console.log(sencondaryResponse)
         const secondaryMenu = menuHelper.handleTree(sencondaryResponse)
         menuHelper.setSecondaryMenu(secondaryMenu)
 

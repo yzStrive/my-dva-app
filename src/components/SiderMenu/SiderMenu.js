@@ -28,14 +28,67 @@ const getIcon = icon => {
   return icon
 }
 
+const getCodeByPath = (menus,path)=>{
+  menus.forEach(item=>{
+    if(item.children){
+      if(item.path === path){
+        return item.code
+      }else{
+        getCodeByPath(item.children,path)
+      }
+    }
+  })
+}
+const getMenuTreeCodes = (menus)=>{
+  let  codes = []
+  menus.forEach(item=>{
+    if(item.children){
+      codes = [...codes,...getMenuTreeCodes(item.children)]
+      codes.push({
+        type:'parent',
+        code:item.code
+      })
+    }else if(item.path){
+      codes.push({
+        type:'child',
+        path:item.path
+      })
+    }
+  })
+  return codes
+}
+
+
+const getParentsByPath =(menus,path)=>{
+
+}
+
+const gettt = (menus=[],parents=[])=>{
+  menus.forEach(item=>{
+    if(item.children){
+      gettt(item.children,parents)
+      parents.push(item.code)
+    }else{
+      parents.push(item.path)
+      parents.push('next')
+    }
+  })
+  return parents
+}
+
+const tttt = (codes = []) => {
+  // const
+  codes.forEach((item,index)=>{
+    if(item.type === 'parent'){
+
+    }
+  })
+}
+
 export const getMeunMatcheys = (flatMenuKeys, path) => {
-  // console.log(flatMenuKeys)
-  // console.log('**********************')
-  // console.log(path)
   const result =  flatMenuKeys.filter(item => {
     return pathToRegexp(item).test(path)
   })
-  // console.log(result)
   return result
 }
 
@@ -80,7 +133,7 @@ export default class SiderMenu extends PureComponent {
       if (item.children) {
         keys = keys.concat(this.getFlatMenuKeys(item.children))
       }
-      keys.push(item.path)
+      keys.push(item.code)
     })
     return keys
   }
@@ -90,7 +143,7 @@ export default class SiderMenu extends PureComponent {
    * @memberof SiderMenu
    */
   getMenuItemPath = item => {
-    const itemPath = this.conversionPath(item.path)
+    const itemPath = this.conversionPath(item.code)
     const icon = getIcon(item.icon)
     const { target, name } = item
     // Is it a http link
@@ -140,7 +193,7 @@ export default class SiderMenu extends PureComponent {
                 item.name
               )
             }
-            key={item.path}
+            key={item.code}
           >
             {childrenItems}
           </SubMenu>
@@ -148,7 +201,7 @@ export default class SiderMenu extends PureComponent {
       }
       return null
     } else {
-      return <Menu.Item key={item.path}>{this.getMenuItemPath(item)}</Menu.Item>
+      return <Menu.Item key={item.code}>{this.getMenuItemPath(item)}</Menu.Item>
     }
   }
   /**
@@ -186,7 +239,7 @@ export default class SiderMenu extends PureComponent {
   }
   isMainMenu = (key,menus) => {
     return menus.some(
-      item => key && (item.key === key || item.path === key)
+      item => key && (item.key === key || item.code === key)
     )
   }
   handleOpenChange = (openKeys,menus) => {
@@ -200,6 +253,7 @@ export default class SiderMenu extends PureComponent {
   render() {
     const { logo, collapsed, onCollapse,menuData } = this.props
     const { openKeys } = this.state
+    console.log(menuData)
     // Don't show popup menu when it is been collapsed
     const menuProps = collapsed
       ? {}

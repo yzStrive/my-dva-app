@@ -6,6 +6,7 @@ export const getSecondaryMenu = () => {
 }
 export const setSecondaryMenu = menu => {
   // const newMenu = handleTree(menu)
+  console.log(menu)
   return sessionStorage.setItem(sencondary, JSON.stringify(menu || []))
 }
 export const getFirstLevelMenu = () => {
@@ -32,15 +33,18 @@ export const updateMenusHiddenProp = (type) => {
 
 export const handleTree = trees => {
   return trees.map(item => {
-    const path = item.menuUrl ? item.menuUrl : `/${item.menuCode}`
+    // const path = item.menuUrl ? item.menuUrl : `/${item.menuCode}`
+    const parent = item.upMenuCode?item.upMenuCode:item.menuScope
     const result = {
-      path,
+      parent,
       name: item.menuName,
       icon: item.menuIcon,
-      parent: item.menuScope
+      code: item.menuCode
     }
-    if (item.children) {
+    if (item.children.length>0) {
       result.children = handleTree(item.children)
+    }else{
+      result.path = item.menuUrl
     }
     return result
   })
@@ -54,5 +58,9 @@ export const handleFirstTree = trees=>{
       path:`/${scope}`,
     }
   })
+}
+
+export const handleList = ()=>{
+
 }
 
