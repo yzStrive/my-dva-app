@@ -24,37 +24,26 @@ const { Content, Header } = Layout
 const redirectData = []
 const secondaryMenu = getMenuData()
 const firstLevelMenu = getFirstMenuData()
-const getRedirect = item => {
-  if (item && item.children) {
-    if (item.children[0] && item.children[0].path) {
-      redirectData.push({
-        from: `${item.path}`,
-        to: `${item.children[0].path}`
-      })
-      item.children.forEach(children => {
-        getRedirect(children)
-      })
-    }
-  }
-}
 const paths = menuHelper.getPaths(secondaryMenu)
 const pushFirstMenuRedirect = item => {
   // '/express' => 'express/.../../'
   let redirectPath
-  paths.every(it=>{
+  for(let i=0,len=paths.length;i<len;i++){
+    const it = paths[i]
     const urls = urlToList(it)
-    if(urls[0]===item.scope){
+    if(urls[0] === item.scope){
       redirectPath = it
-      return false
+      break
+    }else{
+      redirectPath = '/'
     }
-  })
+  }
   redirectData.push({
     from:`${item.path}`,
     to:`${redirectPath}`
   })
 }
 firstLevelMenu.forEach(pushFirstMenuRedirect)
-secondaryMenu.forEach(getRedirect)
 
 /**
  * 获取面包屑映射

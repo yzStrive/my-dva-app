@@ -55,8 +55,8 @@ export default class SiderMenu extends PureComponent {
   getSelectedMenuKeys(props) {
     const { location: { pathname }, menuData } = props || this.props
     const code = getCodeByPath(menuData, pathname)
-    const result = getParentsByCode(menuData, code)
-    return result
+    const parents = getParentsByCode(menuData, code)
+    return [...parents,code]
   }
 
   /**

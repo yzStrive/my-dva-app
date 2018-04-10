@@ -16,7 +16,10 @@ export const setFirstLevelMenu = menu => {
   const newMenu = handleFirstTree(menu)
   return sessionStorage.setItem(firstLevel, JSON.stringify(newMenu || []))
 }
-
+/**
+ * 根据当前类型更新菜单的隐藏属性
+ * @param {string} type
+ */
 export const updateMenusHiddenProp = type => {
   const menus = getSecondaryMenu()
   const parent = type.split("/").filter(i => i)[0]
@@ -29,7 +32,10 @@ export const updateMenusHiddenProp = type => {
   })
   setSecondaryMenu(menus)
 }
-
+/**／
+ * 转换树结构
+ * @param {array} trees
+ */
 export const handleTree = trees => {
   return trees.map(item => {
     // const path = item.menuUrl ? item.menuUrl : `/${item.menuCode}`
@@ -48,6 +54,10 @@ export const handleTree = trees => {
     return result
   })
 }
+/**
+ * 转换一级菜单树
+ * @param {array} trees
+ */
 export const handleFirstTree = trees => {
   return trees.map(item => {
     let { name, scope } = item
@@ -101,8 +111,6 @@ export function getPathByCode(menus, code) {
   }
   return inner(menus,code)
 }
-
-
 /**
  *根据url获取对应菜单的code
  * @param {array} menus  菜单数组
