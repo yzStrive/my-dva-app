@@ -13,7 +13,7 @@ import NotFound from "../routes/Exception/404"
 import { getRoutes } from "../utils/utils"
 import { getMenuData,getFirstMenuData } from "../common/menu"
 import * as menuHelper from '../utils/menu'
-import { urlToScope } from '../utils/urlTool'
+import { urlToScope,urlToList } from '../utils/urlTool'
 import logo from "../assets/logo.svg"
 
 const { Content, Header } = Layout
@@ -37,12 +37,20 @@ const getRedirect = item => {
     }
   }
 }
+const paths = menuHelper.getPaths(secondaryMenu)
 const pushFirstMenuRedirect = item => {
-  // '/express' => 'express'
-  const redirect = secondaryMenu.find(it=>it.parent === item.scope)
+  // '/express' => 'express/.../../'
+  let redirectPath
+  paths.every(it=>{
+    const urls = urlToList(it)
+    if(urls[0]===item.scope){
+      redirectPath = it
+      return false
+    }
+  })
   redirectData.push({
     from:`${item.path}`,
-    to:`${redirect.path}`
+    to:`${redirectPath}`
   })
 }
 firstLevelMenu.forEach(pushFirstMenuRedirect)
@@ -92,10 +100,10 @@ let isMobile
 enquireScreen(b => {
   isMobile = b
 })
-@connect(({ user,global }) => ({
+@connect(({ user,layout }) => ({
   currentUser: user.currentUser,
-  collapsed:global.collapsed,
-  menuData:global.menuData
+  collapsed:layout.collapsed,
+  menuData:layout.menuData,
 }))
 export default class BasicLayout extends React.PureComponent {
   static childContextTypes = {
@@ -153,33 +161,17 @@ export default class BasicLayout extends React.PureComponent {
   }
   handleMenuCollapse = collapsed => {
     this.props.dispatch({
-      type: "global/changeLayoutCollapsed",
+      type: "layout/changeLayoutCollapsed",
       payload: collapsed
-    })
-  }
-  handleNoticeClear = type => {
-    message.success(`清空了${type}`)
-    this.props.dispatch({
-      type: "global/clearNotices",
-      payload: type
     })
   }
   handleMenuClick = ({key}) => {
     const scope = urlToScope(key)
-    // console.log(scope)
-    // menuHelper.updateMenusHiddenProp(scope)
     this.props.dispatch({
-      type:'global/updateMenuData',
+      type:'layout/updateMenuData',
       key,
       scope
     })
-  }
-  handleNoticeVisibleChange = visible => {
-    if (visible) {
-      this.props.dispatch({
-        type: "global/fetchNotices"
-      })
-    }
   }
   render() {
     const {

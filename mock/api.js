@@ -318,7 +318,25 @@ export const getSecondaryMenu = [
     children: [
       {
         upMenuCode: "20100000",
-        children: [],
+        children: [{
+          upMenuCode: "20100100",
+          children: [],
+          menuIcon: "swap",
+          menuUrl: "/express/order_list/child1",
+          menuCode: "20100101",
+          menuLevel: 3,
+          menuName: "查询child-1",
+          menuScope: "express"
+        },{
+          upMenuCode: "20100100",
+          children: [],
+          menuIcon: "swap",
+          menuUrl: "/express/order_list/child/2",
+          menuCode: "20100102",
+          menuLevel: 3,
+          menuName: "查询-child2",
+          menuScope: "express"
+        }],
         menuIcon: "search",
         menuUrl: "/express/order_list",
         menuCode: "20100100",
@@ -391,81 +409,81 @@ export const getSecondaryMenu = [
     menuName: "配送设置",
     menuScope: "express"
   },
-  {
-    children: [
-      {
-        upMenuCode: "20100000",
-        children: [],
-        menuIcon: "search",
-        menuUrl: "/express1/order_list",
-        menuCode: "20100100",
-        menuLevel: 2,
-        menuName: "订单查询",
-        menuScope: "express1"
-      },
-      {
-        upMenuCode: "20100000",
-        children: [],
-        menuIcon: "swap",
-        menuUrl: "/express1/order_dispatch",
-        menuCode: "20100200",
-        menuLevel: 2,
-        menuName: "订单调度",
-        menuScope: "express1"
-      }
-    ],
-    menuCode: "20100000",
-    menuIcon: "file",
-    menuLevel: 1,
-    menuName: "订单管理",
-    menuScope: "express1"
-  },
-  {
-    children: [
-      {
-        upMenuCode: "20200000",
-        children: [],
-        menuIcon: "idcard",
-        menuUrl: "/express1/check_courier",
-        menuCode: "20200100",
-        menuLevel: 2,
-        menuName: "配送员审核",
-        menuScope: "express1"
-      },
-      {
-        upMenuCode: "20200000",
-        children: [],
-        menuIcon: "solution",
-        menuUrl: "/express1/manage_courier",
-        menuCode: "20200200",
-        menuLevel: 2,
-        menuName: "配送员管理",
-        menuScope: "express1"
-      }
-    ],
-    menuCode: "20200000",
-    menuIcon: "team",
-    menuLevel: 1,
-    menuName: "配送员管理",
-    menuScope: "express1"
-  },
-  {
-    children: [
-      {
-        upMenuCode: "20300000",
-        children: [],
-        menuIcon: "menu-unfold",
-        menuUrl: "/express1/delivery-settings",
-        menuCode: "20300100",
-        menuLevel: 2,
-        menuName: "配送设置",
-        menuScope: "express1"
-      }
-    ],
-    menuCode: "20300000",
-    menuIcon: "setting",
-    menuLevel: 1,
-    menuName: "配送设置",
-    menuScope: "express1"
-  }
+  // {
+  //   children: [
+  //     {
+  //       upMenuCode: "20100000",
+  //       children: [],
+  //       menuIcon: "search",
+  //       menuUrl: "/express1/order_list",
+  //       menuCode: "20100100",
+  //       menuLevel: 2,
+  //       menuName: "订单查询",
+  //       menuScope: "express1"
+  //     },
+  //     {
+  //       upMenuCode: "20100000",
+  //       children: [],
+  //       menuIcon: "swap",
+  //       menuUrl: "/express1/order_dispatch",
+  //       menuCode: "20100200",
+  //       menuLevel: 2,
+  //       menuName: "订单调度",
+  //       menuScope: "express1"
+  //     }
+  //   ],
+  //   menuCode: "20100000",
+  //   menuIcon: "file",
+  //   menuLevel: 1,
+  //   menuName: "订单管理",
+  //   menuScope: "express1"
+  // },
+  // {
+  //   children: [
+  //     {
+  //       upMenuCode: "20200000",
+  //       children: [],
+  //       menuIcon: "idcard",
+  //       menuUrl: "/express1/check_courier",
+  //       menuCode: "20200100",
+  //       menuLevel: 2,
+  //       menuName: "配送员审核",
+  //       menuScope: "express1"
+  //     },
+  //     {
+  //       upMenuCode: "20200000",
+  //       children: [],
+  //       menuIcon: "solution",
+  //       menuUrl: "/express1/manage_courier",
+  //       menuCode: "20200200",
+  //       menuLevel: 2,
+  //       menuName: "配送员管理",
+  //       menuScope: "express1"
+  //     }
+  //   ],
+  //   menuCode: "20200000",
+  //   menuIcon: "team",
+  //   menuLevel: 1,
+  //   menuName: "配送员管理",
+  //   menuScope: "express1"
+  // },
+  // {
+  //   children: [
+  //     {
+  //       upMenuCode: "20300000",
+  //       children: [],
+  //       menuIcon: "menu-unfold",
+  //       menuUrl: "/express1/delivery-settings",
+  //       menuCode: "20300100",
+  //       menuLevel: 2,
+  //       menuName: "配送设置",
+  //       menuScope: "express1"
+  //     }
+  //   ],
+  //   menuCode: "20300000",
+  //   menuIcon: "setting",
+  //   menuLevel: 1,
+  //   menuName: "配送设置",
+  //   menuScope: "express1"
+  // }
 ]

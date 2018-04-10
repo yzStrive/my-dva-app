@@ -68,9 +68,12 @@ const getFlatMenuData = menus => {
 export const getRouterData = app => {
   const routerConfig = {
     '/': {
-      component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
+      component: dynamicWrapper(app, ['user','layout'], () => import('../layouts/BasicLayout')),
     },
-    '/express/order-list': {
+    '/express/order_list/child1': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
+    },
+    '/express/order_list/child/2': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
     },
     '/express/delivery-settings':{
@@ -85,24 +88,21 @@ export const getRouterData = app => {
     '/express/order_dispatch':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/express/order_list':{
-      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
-    },
-    '/express1/delivery-settings':{
-      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
-    },
-    '/express1/manage_courier':{
-      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
-    },
-    '/express1/check_courier':{
-      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
-    },
-    '/express1/order_dispatch':{
-      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
-    },
-    '/express1/order_list':{
-      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
-    },
+    // '/express1/delivery-settings':{
+    //   component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    // },
+    // '/express1/manage_courier':{
+    //   component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    // },
+    // '/express1/check_courier':{
+    //   component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    // },
+    // '/express1/order_dispatch':{
+    //   component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    // },
+    // '/express1/order_list':{
+    //   component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    // },
     '/user':{
       component: dynamicWrapper(app, ['login'], () => import('../layouts/UserLayout')),
     },
@@ -138,6 +138,5 @@ export const getRouterData = app => {
     }
     routerData[path] = router
   })
-  console.log(routerData)
   return routerData
 }

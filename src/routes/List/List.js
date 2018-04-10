@@ -1,9 +1,9 @@
 import React, { Component } from "react"
 import { connect } from "dva"
 
-@connect(({list,loading})=>({
+@connect(({list})=>({
   list,
-  loading:loading.models.list
+  // loading:loading.models.list
 }))
 export default class SearchList extends Component {
   componentDidMount(){

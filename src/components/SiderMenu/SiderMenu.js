@@ -3,7 +3,13 @@ import { Layout, Menu, Icon } from "antd"
 import pathToRegexp from "path-to-regexp"
 import { Link } from "dva/router"
 import styles from "./index.less"
-import { urlToList } from '../../utils/urlTool'
+import { urlToList } from "../../utils/urlTool"
+import {
+  getPathByCode,
+  getCodeByPath,
+  getParentByCode,
+  getParentsByCode
+} from "../../utils/menu"
 
 const { Sider } = Layout
 const { SubMenu } = Menu
@@ -28,122 +34,38 @@ const getIcon = icon => {
   return icon
 }
 
-const getCodeByPath = (menus,path)=>{
-  menus.forEach(item=>{
-    if(item.children){
-      if(item.path === path){
-        return item.code
-      }else{
-        getCodeByPath(item.children,path)
-      }
-    }
-  })
-}
-const getMenuTreeCodes = (menus)=>{
-  let  codes = []
-  menus.forEach(item=>{
-    if(item.children){
-      codes = [...codes,...getMenuTreeCodes(item.children)]
-      codes.push({
-        type:'parent',
-        code:item.code
-      })
-    }else if(item.path){
-      codes.push({
-        type:'child',
-        path:item.path
-      })
-    }
-  })
-  return codes
-}
-
-
-const getParentsByPath =(menus,path)=>{
-
-}
-
-const gettt = (menus=[],parents=[])=>{
-  menus.forEach(item=>{
-    if(item.children){
-      gettt(item.children,parents)
-      parents.push(item.code)
-    }else{
-      parents.push(item.path)
-      parents.push('next')
-    }
-  })
-  return parents
-}
-
-const tttt = (codes = []) => {
-  // const
-  codes.forEach((item,index)=>{
-    if(item.type === 'parent'){
-
-    }
-  })
-}
-
-export const getMeunMatcheys = (flatMenuKeys, path) => {
-  const result =  flatMenuKeys.filter(item => {
-    return pathToRegexp(item).test(path)
-  })
-  return result
-}
-
 export default class SiderMenu extends PureComponent {
   constructor(props) {
     super(props)
-    this.flatMenuKeys = this.getFlatMenuKeys(props.menuData)
     this.state = {
-      openKeys: this.getDefaultCollapsedSubMenus(props)
+      openKeys: this.getSelectedMenuKeys(props)
     }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname !== this.props.location.pathname) {
       this.setState({
-        openKeys: this.getDefaultCollapsedSubMenus(nextProps)
+        openKeys: this.getSelectedMenuKeys(nextProps)
       })
     }
   }
   /**
-   * Convert pathname to openKeys
-   * /list/search/articles = > ['list','/list/search']
-   * @param  props
+   * Convert pathname to openKeys(codes)
+   * @param   props
    */
-  getDefaultCollapsedSubMenus(props) {
-    const { location: { pathname } } = props || this.props
-    const result =  urlToList(pathname)
-      .map(item => {
-        return getMeunMatcheys(this.flatMenuKeys, item)[0]
-      })
-      .filter(item => item)
-      // console.log(result)
+  getSelectedMenuKeys(props) {
+    const { location: { pathname }, menuData } = props || this.props
+    const code = getCodeByPath(menuData, pathname)
+    const result = getParentsByCode(menuData, code)
     return result
   }
-  /**
-   * Recursively flatten the data
-   * [{path:string},{path:string}] => {path,path2}
-   * @param  menus
-   */
-  getFlatMenuKeys(menus) {
-    let keys = []
-    menus.forEach(item => {
-      if (item.children) {
-        keys = keys.concat(this.getFlatMenuKeys(item.children))
-      }
-      keys.push(item.code)
-    })
-    return keys
-  }
+
   /**
    * 判断是否是http链接.返回 Link 或 a
    * Judge whether it is http link.return a or Link
    * @memberof SiderMenu
    */
   getMenuItemPath = item => {
-    const itemPath = this.conversionPath(item.code)
+    const itemPath = this.getPathByCode(item.code)
     const icon = getIcon(item.icon)
     const { target, name } = item
     // Is it a http link
@@ -172,6 +94,10 @@ export default class SiderMenu extends PureComponent {
         <span>{name}</span>
       </Link>
     )
+  }
+  getPathByCode(code) {
+    const { menuData } = this.props
+    return getPathByCode(menuData, code)
   }
   /**
    * get SubMenu or Item
@@ -221,39 +147,21 @@ export default class SiderMenu extends PureComponent {
       })
       .filter(item => item)
   }
-  // Get the currently selected menu
-  getSelectedMenuKeys = () => {
-    const { location: { pathname } } = this.props
-    return urlToList(pathname).map(itemPath =>
-      getMeunMatcheys(this.flatMenuKeys, itemPath).pop()
-    )
+
+  isMainMenu = (key, menus) => {
+    return menus.some(item => key && (item.key === key || item.code === key))
   }
-  // conversion Path
-  // 转化路径
-  conversionPath = path => {
-    if (path && path.indexOf("http") === 0) {
-      return path
-    } else {
-      return `/${path || ""}`.replace(/\/+/g, "/")
-    }
-  }
-  isMainMenu = (key,menus) => {
-    return menus.some(
-      item => key && (item.key === key || item.code === key)
-    )
-  }
-  handleOpenChange = (openKeys,menus) => {
+  handleOpenChange = (openKeys, menus) => {
     const lastOpenKey = openKeys[openKeys.length - 1]
     const moreThanOne =
-      openKeys.filter(openKey => this.isMainMenu(openKey,menus)).length > 1
+      openKeys.filter(openKey => this.isMainMenu(openKey, menus)).length > 1
     this.setState({
       openKeys: moreThanOne ? [lastOpenKey] : [...openKeys]
     })
   }
   render() {
-    const { logo, collapsed, onCollapse,menuData } = this.props
+    const { logo, collapsed, onCollapse, menuData } = this.props
     const { openKeys } = this.state
-    console.log(menuData)
     // Don't show popup menu when it is been collapsed
     const menuProps = collapsed
       ? {}
@@ -280,7 +188,7 @@ export default class SiderMenu extends PureComponent {
           theme="dark"
           mode="inline"
           {...menuProps}
-          onOpenChange={(openKeys)=>this.handleOpenChange(openKeys,menuData)}
+          onOpenChange={openKeys => this.handleOpenChange(openKeys, menuData)}
           selectedKeys={selectedKeys}
           style={{ padding: "16px 0", width: "100%" }}
         >
