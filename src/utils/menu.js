@@ -1,12 +1,18 @@
 const firstLevel = "firstMenuTree"
 const sencondary = "secondaryMenuTree"
+const currentScope = "currentScope"
+export const getCurrentScope = ()=>{
+  return sessionStorage.getItem(currentScope)
+}
+export const setCurrentScope = (scope)=>{
+  sessionStorage.setItem(currentScope,scope)
+}
 export const getSecondaryMenu = () => {
   const result = sessionStorage.getItem(sencondary) || "[]"
   return JSON.parse(result)
 }
 export const setSecondaryMenu = menu => {
-  // const newMenu = handleTree(menu)
-  return sessionStorage.setItem(sencondary, JSON.stringify(menu || []))
+  sessionStorage.setItem(sencondary, JSON.stringify(menu || []))
 }
 export const getFirstLevelMenu = () => {
   const result = sessionStorage.getItem(firstLevel) || "[]"
@@ -14,7 +20,7 @@ export const getFirstLevelMenu = () => {
 }
 export const setFirstLevelMenu = menu => {
   const newMenu = handleFirstTree(menu)
-  return sessionStorage.setItem(firstLevel, JSON.stringify(newMenu || []))
+  sessionStorage.setItem(firstLevel, JSON.stringify(newMenu || []))
 }
 /**
  * 根据当前类型更新菜单的隐藏属性
@@ -22,7 +28,6 @@ export const setFirstLevelMenu = menu => {
  */
 export const updateMenusHiddenProp = type => {
   const menus = getSecondaryMenu()
-  const parent = type.split("/").filter(i => i)[0]
   menus.forEach(item => {
     if (item.parent !== type) {
       item.hideInMenu = true

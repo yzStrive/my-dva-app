@@ -5,7 +5,15 @@ import groupBy from "lodash/groupBy"
 import Debounce from "lodash-decorators/debounce"
 import { Link } from "dva/router"
 import styles from "./index.less"
-import {  getFirstLevelMenu } from '../../utils/menu'
+import {
+  getFirstLevelMenu,
+  getPathByCode,
+  getCodeByPath,
+  getParentByCode,
+  getParentsByCode
+} from "../../utils/menu"
+
+const firstMenuDatas = getFirstLevelMenu()
 export default class GlobalHeader extends PureComponent {
   componentWillUnmount() {
     this.triggerResizeEvent.cancel()
@@ -18,10 +26,9 @@ export default class GlobalHeader extends PureComponent {
     window.dispatchEvent(event)
   }
   render() {
-    const { currentUser, onMenuClick } = this.props
-    const leftMenuDatas = getFirstLevelMenu()
-    const leftMenu = leftMenuDatas.map((item, index) => (
-      <Menu.Item key={item.path}>
+    const { currentUser, onMenuClick,currentScope } = this.props
+    const navMenu = firstMenuDatas.map((item, index) => (
+      <Menu.Item key={item.scope}>
         <Icon />
         {item.name}
       </Menu.Item>
@@ -31,8 +38,9 @@ export default class GlobalHeader extends PureComponent {
         onClick={onMenuClick}
         style={{ background: "#232f34",color:"#fff" }}
         mode="horizontal"
+        selectedKeys={[currentScope]}
       >
-        {leftMenu}
+        {navMenu}
       </Menu>
     )
   }

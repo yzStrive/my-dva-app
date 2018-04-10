@@ -24,10 +24,10 @@ export default {
 
         const sencondaryResponse = yield call(getSecondaryMenu)
         const secondaryMenu = menuHelper.handleTree(sencondaryResponse)
+        const currentScope = menuHelper.getFirstLevelMenu()[0].scope
         menuHelper.setSecondaryMenu(secondaryMenu)
-
-        menuHelper.updateMenusHiddenProp(menuHelper.getFirstLevelMenu()[0].scope)
-        // push url
+        menuHelper.setCurrentScope(currentScope)
+        menuHelper.updateMenusHiddenProp(currentScope)
         yield put(routerRedux.push('/'));
       }
     },

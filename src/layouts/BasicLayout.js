@@ -93,6 +93,7 @@ enquireScreen(b => {
   currentUser: user.currentUser,
   collapsed:layout.collapsed,
   menuData:layout.menuData,
+  currentScope:layout.currentScope
 }))
 export default class BasicLayout extends React.PureComponent {
   static childContextTypes = {
@@ -155,11 +156,13 @@ export default class BasicLayout extends React.PureComponent {
     })
   }
   handleMenuClick = ({key}) => {
-    const scope = urlToScope(key)
+    const currentScope = key
     this.props.dispatch({
       type:'layout/updateMenuData',
-      key,
-      scope
+      payload:{
+        path:`/${currentScope}`,
+        currentScope
+      }
     })
   }
   render() {
@@ -171,7 +174,8 @@ export default class BasicLayout extends React.PureComponent {
       routerData,
       match,
       location,
-      menuData
+      menuData,
+      currentScope
     } = this.props
     const bashRedirect = this.getBashRedirect()
     const layout = (
@@ -179,6 +183,7 @@ export default class BasicLayout extends React.PureComponent {
           <GlobalHeader
           logo={logo}
           currentUser={currentUser}
+          currentScope = {currentScope}
           onMenuClick={this.handleMenuClick} />
         <Layout>
           <SiderMenu
