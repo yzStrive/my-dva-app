@@ -1,35 +1,16 @@
 import { isUrl } from "../utils/utils"
-
-const menuData = [
-  {
-    name: "列表页",
-    icon: "table",
-    path: "list",
-    children: [
-      {
-        name:'list',
-        path:'test-list'
-      },
-    ]
-  },
-
-]
-function formatter(data, parentPath = '/', parentAuthority) {
+import { getSecondaryMenu, getFirstLevelMenu } from "../utils/menu"
+function formatter(data) {
   return data.map(item => {
-    let { path } = item;
-    if (!isUrl(path)) {
-      path = parentPath + item.path;
-    }
     const result = {
-      ...item,
-      path,
-      authority: item.authority || parentAuthority,
-    };
-    if (item.children) {
-      result.children = formatter(item.children, `${parentPath}${item.path}/`, item.authority);
+      ...item
     }
-    return result;
-  });
+    if (item.children) {
+      result.children = formatter(item.children)
+    }
+    return result
+  })
 }
 
-export const getMenuData = () => formatter(menuData);
+export const getMenuData = () => formatter(getSecondaryMenu())
+export const getFirstMenuData = () => getFirstLevelMenu()

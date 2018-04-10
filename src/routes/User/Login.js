@@ -22,7 +22,6 @@ export default class LoginPage extends Component {
 
   handleSubmit = (err, values) => {
     const { type } = this.state
-    console.log(err, values)
     if (!err) {
       this.props.dispatch({
         type: "login/login",

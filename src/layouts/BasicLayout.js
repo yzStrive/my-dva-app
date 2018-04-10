@@ -1,17 +1,19 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Layout, message } from "antd"
+import { Layout, message,Menu } from "antd"
 import DocumentTitle from "react-document-title"
 import { connect } from "dva"
 import { Route, Redirect, Switch, routerRedux } from "dva/router"
 import { ContainerQuery } from "react-container-query"
 import classNames from "classnames"
 import { enquireScreen } from "enquire-js"
-import GlobalHeader from '../components/GlobalHeader';
-import SiderMenu from '../components/SiderMenu';
+import GlobalHeader from "../components/GlobalHeader"
+import SiderMenu from "../components/SiderMenu"
 import NotFound from "../routes/Exception/404"
 import { getRoutes } from "../utils/utils"
-import { getMenuData } from "../common/menu"
+import { getMenuData,getFirstMenuData } from "../common/menu"
+import * as menuHelper from '../utils/menu'
+import { urlToScope,urlToList } from '../utils/urlTool'
 import logo from "../assets/logo.svg"
 
 const { Content, Header } = Layout
@@ -20,20 +22,28 @@ const { Content, Header } = Layout
  * 根据菜单取得重定向地址.
  */
 const redirectData = []
-const getRedirect = item => {
-  if (item && item.children) {
-    if (item.children[0] && item.children[0].path) {
-      redirectData.push({
-        from: `${item.path}`,
-        to: `${item.children[0].path}`
-      })
-      item.children.forEach(children => {
-        getRedirect(children)
-      })
+const secondaryMenu = getMenuData()
+const firstLevelMenu = getFirstMenuData()
+const paths = menuHelper.getPaths(secondaryMenu)
+const pushFirstMenuRedirect = item => {
+  // '/express' => 'express/.../../'
+  let redirectPath
+  for(let i=0,len=paths.length;i<len;i++){
+    const it = paths[i]
+    const urls = urlToList(it)
+    if(urls[0] === item.scope){
+      redirectPath = it
+      break
+    }else{
+      redirectPath = '/'
     }
   }
+  redirectData.push({
+    from:`${item.path}`,
+    to:`${redirectPath}`
+  })
 }
-getMenuData().forEach(getRedirect)
+firstLevelMenu.forEach(pushFirstMenuRedirect)
 
 /**
  * 获取面包屑映射
@@ -79,8 +89,11 @@ let isMobile
 enquireScreen(b => {
   isMobile = b
 })
-@connect(({user})=>({
-  currentUser:user.currentUser
+@connect(({ user,layout }) => ({
+  currentUser: user.currentUser,
+  collapsed:layout.collapsed,
+  menuData:layout.menuData,
+  currentScope:layout.currentScope
 }))
 export default class BasicLayout extends React.PureComponent {
   static childContextTypes = {
@@ -138,34 +151,19 @@ export default class BasicLayout extends React.PureComponent {
   }
   handleMenuCollapse = collapsed => {
     this.props.dispatch({
-      type: "global/changeLayoutCollapsed",
+      type: "layout/changeLayoutCollapsed",
       payload: collapsed
     })
   }
-  handleNoticeClear = type => {
-    message.success(`清空了${type}`)
+  handleMenuClick = ({key}) => {
+    const currentScope = key
     this.props.dispatch({
-      type: "global/clearNotices",
-      payload: type
+      type:'layout/updateMenuData',
+      payload:{
+        path:`/${currentScope}`,
+        currentScope
+      }
     })
-  }
-  handleMenuClick = ({ key }) => {
-    if (key === "triggerError") {
-      this.props.dispatch(routerRedux.push("/exception/trigger"))
-      return
-    }
-    if (key === "logout") {
-      this.props.dispatch({
-        type: "login/logout"
-      })
-    }
-  }
-  handleNoticeVisibleChange = visible => {
-    if (visible) {
-      this.props.dispatch({
-        type: "global/fetchNotices"
-      })
-    }
   }
   render() {
     const {
@@ -175,51 +173,45 @@ export default class BasicLayout extends React.PureComponent {
       notices,
       routerData,
       match,
-      location
+      location,
+      menuData,
+      currentScope
     } = this.props
     const bashRedirect = this.getBashRedirect()
     const layout = (
       <Layout>
-        <SiderMenu
+          <GlobalHeader
           logo={logo}
-          menuData={getMenuData()}
-          collapsed={collapsed}
-          location={location}
-          isMobile={this.state.isMobile}
-          onCollapse={this.handleMenuCollapse}
-        />
+          currentUser={currentUser}
+          currentScope = {currentScope}
+          onMenuClick={this.handleMenuClick} />
         <Layout>
-          <Header style={{ padding: 0 }}>
-            <GlobalHeader
-              logo={logo}
-              currentUser={currentUser}
-              fetchingNotices={fetchingNotices}
-              notices={notices}
-              collapsed={collapsed}
-              isMobile={this.state.isMobile}
-              onNoticeClear={this.handleNoticeClear}
-              onCollapse={this.handleMenuCollapse}
-              onMenuClick={this.handleMenuClick}
-              onNoticeVisibleChange={this.handleNoticeVisibleChange}
-            />
-          </Header>
-          <Content style={{ margin: "24px 24px 0", height: "100%" }}>
-            <Switch>
-              {redirectData.map(item => (
-                <Redirect key={item.from} exact from={item.from} to={item.to} />
-              ))}
-              {getRoutes(match.path, routerData).map(item => (
-                <Route
-                  key={item.key}
-                  path={item.path}
-                  component={item.component}
-                  exact={item.exact}
-                />
-              ))}
-              <Redirect exact from="/" to={bashRedirect} />
-              <Route render={NotFound} />
-            </Switch>
-          </Content>
+          <SiderMenu
+            menuData={menuData}
+            collapsed={collapsed}
+            location={location}
+            isMobile={this.state.isMobile}
+            onCollapse={this.handleMenuCollapse}
+          />
+          <Layout>
+            <Content style={{ margin: "24px 24px 0", height: "100%" }}>
+              <Switch>
+                {redirectData.map(item => (
+                  <Redirect key={item.from} exact from={item.from} to={item.to} />
+                ))}
+                {getRoutes(match.path, routerData).map(item => (
+                  <Route
+                    key={item.key}
+                    path={item.path}
+                    component={item.component}
+                    exact={item.exact}
+                  />
+                ))}
+                <Redirect exact from="/" to={bashRedirect} />
+                <Route render={NotFound} />
+              </Switch>
+            </Content>
+          </Layout>
         </Layout>
       </Layout>
     )

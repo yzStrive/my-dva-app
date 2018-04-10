@@ -68,13 +68,43 @@ const getFlatMenuData = menus => {
 export const getRouterData = app => {
   const routerConfig = {
     '/': {
-      component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
+      component: dynamicWrapper(app, ['user','layout'], () => import('../layouts/BasicLayout')),
     },
-    '/list/test-list':{
+    '/express/order_list/child1': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
+    },
+    '/express/order_list/child/2': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
+    },
+    '/express/delivery-settings':{
       component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
     },
-    '/user': {
-      component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
+    '/express/manage_courier':{
+      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    },
+    '/express/check_courier':{
+      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    },
+    '/express/order_dispatch':{
+      component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    },
+    // '/express1/delivery-settings':{
+    //   component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    // },
+    // '/express1/manage_courier':{
+    //   component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    // },
+    // '/express1/check_courier':{
+    //   component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    // },
+    // '/express1/order_dispatch':{
+    //   component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    // },
+    // '/express1/order_list':{
+    //   component:dynamicWrapper(app,['list'],()=>import('../routes/List/List'))
+    // },
+    '/user':{
+      component: dynamicWrapper(app, ['login'], () => import('../layouts/UserLayout')),
     },
     '/user/login': {
       component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
@@ -82,7 +112,6 @@ export const getRouterData = app => {
   }
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData())
-
   // Route configuration data
   // eg. {name,authority ...routerConfig }
   const routerData = {}
@@ -104,7 +133,7 @@ export const getRouterData = app => {
     router = {
       ...router,
       name: router.name || menuItem.name,
-      authority: router.authority || menuItem.authority,
+      // authority: router.authority || menuItem.authority,
       hideInBreadcrumb: router.hideInBreadcrumb || menuItem.hideInBreadcrumb
     }
     routerData[path] = router
